@@ -6,6 +6,6 @@ for ($i = 1; $i -le 6; $i++) {
 }
 foreach($pc in $computerNames) {
 	Invoke-Command -ComputerName $pc -ScriptBlock {
-		Get-NetAdapter -Name "LAN Connection" | set-dnsclient -RegisterThisConnectionsAddress $true
+		Get-NetAdapter -Name "LAN Connection" | set-dnsclient -RegisterThisConnectionsAddress $false
 	}
 }
