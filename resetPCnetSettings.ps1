@@ -109,3 +109,4 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
 ############################################
 echo "Disabling Proxy..."
 set-itemproperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -name ProxyEnable -value 0 
+
