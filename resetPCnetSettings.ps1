@@ -125,12 +125,23 @@ Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\‘ -
 # Enable Network Level Authentication
 Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\‘ -Name “UserAuthentication” -Value 1
 
-# Enable Windows firewall rules to allow incoming RDP
-Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
-
+Try{
+	# Check if the rule exists.
+	Get-NetFirewallRule -DisplayGroup "Remote Desktop"
+}
+Catch{
+	# Enable Windows firewall rules to allow incoming RDP
+	Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
+}
 ############################################
 #            TFTP FIREWALL RULE            #
 ############################################
 # TFTP uses port 69 w/ UDP. This adds a new rule that allows it.
 # This should make configuring tftpd64's firewall rules unecessary.
-New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
+Try{
+	# Check if the rule exists.
+	Get-NetFirewallRule -DisplayName "TFTP"
+}
+Catch{
+	New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
+}
