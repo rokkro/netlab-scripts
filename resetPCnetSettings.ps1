@@ -110,3 +110,23 @@ Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
 echo "Disabling Proxy..."
 set-itemproperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -name ProxyEnable -value 0 
 
+############################################
+#            REMOTE DESKTOP                #
+############################################
+# https://exchangepedia.com/2016/10/enable-remote-desktop-rdp-connections-for-admins-on-windows-server-2016.html
+
+# Enable RDP Connections
+Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\‘ -Name “fDenyTSConnections” -Value 0
+
+# Enable Network Level Authentication
+Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp\‘ -Name “UserAuthentication” -Value 1
+
+# Enable Windows firewall rules to allow incoming RDP
+Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
+
+############################################
+#            TFTP FIREWALL RULE            #
+############################################
+# TFTP uses port 69 w/ UDP. This adds a new rule that allows it.
+# This should make configuring tftpd64's firewall rules unecessary.
+New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
