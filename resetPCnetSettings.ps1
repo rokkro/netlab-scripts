@@ -4,8 +4,13 @@
 
 # Get names of all adapters on PC
 $all_adapters = Get-NetAdapter | Select-Object -ExpandProperty "Name"
+
+# Stores domain number this PC resides in
 $domain_num
-$number_of_domains = 6
+
+# Highest domain num (dom1 - dom6 in this case)
+$max_domain_num = 6
+
 foreach($adapter_name in $all_adapters){
 
 	# Enable the adapter if it's disabled
@@ -37,6 +42,9 @@ foreach($adapter_name in $all_adapters){
 	# If adapter has IP starting with 10.0.0.X
 	If ($ipv4_address.StartsWith("10.0.0.")) {
 		Rename-NetAdapter -Name $adapter_name "Internet Connection"
+		
+		# Prevent internet adapter from DNS registration
+		$adapter | set-dnsclient -RegisterThisConnectionsAddress $false
 	}
 	# If adapter has IP starting with 10.0.X.Y (domain adapter)
 	elseif ($ipv4_address.StartsWith("10.0.")){
@@ -51,8 +59,8 @@ foreach($adapter_name in $all_adapters){
 		$domain_num = $ipv4_address.substring($dot_before_last_dot,($last_dot - $dot_before_last_dot))
 		echo "Domain number is " $domain_num
 		
-		# Prevent domain adapter from DNS registration
-		$adapter | set-dnsclient -RegisterThisConnectionsAddress $false
+		# Allow domain adapter to do DNS registration
+		$adapter | set-dnsclient -RegisterThisConnectionsAddress $true
 	}
 }
 
@@ -64,14 +72,19 @@ foreach($adapter_name in $all_adapters){
 route delete 0.0.0.0
 route delete 10.0.0.0
 
+### Internet Connection ### 
+
 # Get adapter by name
 $adapter = Get-NetAdapter -Name "Internet Connection"
 # Getting interface index (necessary for persistent route to become active)
 $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 
 # Add persistent route
+# Direct traffic not destined for another domain through the "Internet Connection" adapter.
 route -p add 0.0.0.0 mask 0.0.0.0 10.0.0.3 if $interface_index
 route -p add 10.0.0.0 mask 255.255.255.0 10.0.0.3 if $interface_index
+
+### LAN Connection ### 
 
 # Get adapter by name
 $adapter = Get-NetAdapter -Name "LAN Connection"
@@ -79,7 +92,8 @@ $adapter = Get-NetAdapter -Name "LAN Connection"
 $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 
 # Add persistent routes. Direct domain router traffic.
-for($i=1;$i -le $number_of_domains;$i++){
+# If traffic is destined for another domain (10.0.X.Y), route it through the domain router.
+for($i=1;$i -le $max_domain_num;$i++){
 	route delete 10.0.$i.0
 	route -p add 10.0.$i.0 mask 255.255.255.0 10.0.$domain_num.1 if $interface_index
 }
@@ -89,3 +103,9 @@ for($i=1;$i -le $number_of_domains;$i++){
 ############################################
 echo "Enabling Firewall..."
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+
+############################################
+#            DISABLE PROXY                 #
+############################################
+echo "Disabling Proxy..."
+set-itemproperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -name ProxyEnable -value 0 
