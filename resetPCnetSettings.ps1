@@ -2,6 +2,10 @@
 #            ADAPTER SETTINGS              #
 ############################################
 
+# Flags for whether DNS entries should be made for each adapter.
+$REGISTER_DNS_INTERNET_CONNECTION = $false
+$REGISTER_DNS_LAN_CONNECTION = $true
+
 # Get names of all adapters on PC
 $all_adapters = Get-NetAdapter | Select-Object -ExpandProperty "Name"
 
@@ -44,7 +48,7 @@ foreach($adapter_name in $all_adapters){
 		Rename-NetAdapter -Name $adapter_name "Internet Connection"
 		
 		# Prevent internet adapter from DNS registration
-		$adapter | set-dnsclient -RegisterThisConnectionsAddress $false
+		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_INTERNET_CONNECTION
 	}
 	# If adapter has IP starting with 10.0.X.Y (domain adapter)
 	elseif ($ipv4_address.StartsWith("10.0.")){
@@ -60,7 +64,7 @@ foreach($adapter_name in $all_adapters){
 		echo "Domain number is " $domain_num
 		
 		# Allow domain adapter to do DNS registration
-		$adapter | set-dnsclient -RegisterThisConnectionsAddress $true
+		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_LAN_CONNECTION 
 	}
 }
 
