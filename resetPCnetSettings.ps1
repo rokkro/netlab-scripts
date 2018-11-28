@@ -2,6 +2,9 @@
 #            ADAPTER SETTINGS              #
 ############################################
 
+$INTERNET_CONNECTION_ADAPTER_NAME = "Internet Connection"
+$LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
+
 # Flags for whether DNS entries should be made for each adapter.
 $REGISTER_DNS_INTERNET_CONNECTION = $false
 $REGISTER_DNS_LAN_CONNECTION = $true
@@ -45,7 +48,7 @@ foreach($adapter_name in $all_adapters){
 	
 	# If adapter has IP starting with 10.0.0.X
 	If ($ipv4_address.StartsWith("10.0.0.")) {
-		Rename-NetAdapter -Name $adapter_name "Internet Connection"
+		Rename-NetAdapter -Name $adapter_name $INTERNET_CONNECTION_ADAPTER_NAME
 		
 		# Prevent internet adapter from DNS registration
 		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_INTERNET_CONNECTION
@@ -53,7 +56,7 @@ foreach($adapter_name in $all_adapters){
 	# If adapter has IP starting with 10.0.X.Y (domain adapter)
 	elseif ($ipv4_address.StartsWith("10.0.")){
 		# Rename it
-		Rename-NetAdapter -Name $adapter_name "LAN Connection"
+		Rename-NetAdapter -Name $adapter_name $LAN_CONNECTION_ADAPTER_NAME
 		
 		# Get the domain number from its IP address
 		# This assumes the switch/router are set up correctly
@@ -76,11 +79,14 @@ foreach($adapter_name in $all_adapters){
 route delete 0.0.0.0
 route delete 10.0.0.0
 
+###########################
 ### Internet Connection ### 
+###########################
 
 # Get adapter by name
-$adapter = Get-NetAdapter -Name "Internet Connection"
-# Getting interface index (necessary for persistent route to become active)
+$adapter = Get-NetAdapter -Name $INTERNET_CONNECTION_ADAPTER_NAME
+# Getting interface index (necessary for persistent routes to become active)
+# Not specifiying an interface index can result in the wrong interface being used for a route.
 $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 
 # Add persistent route
@@ -88,10 +94,12 @@ $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 route -p add 0.0.0.0 mask 0.0.0.0 10.0.0.3 if $interface_index
 route -p add 10.0.0.0 mask 255.255.255.0 10.0.0.3 if $interface_index
 
+######################
 ### LAN Connection ### 
+######################
 
 # Get adapter by name
-$adapter = Get-NetAdapter -Name "LAN Connection"
+$adapter = Get-NetAdapter -Name $LAN_CONNECTION_ADAPTER_NAME
 # Getting interface index (necessary for persistent route to become active)
 $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 
@@ -131,6 +139,7 @@ Try{
 }
 Catch{
 	# Enable Windows firewall rules to allow incoming RDP
+	echo "Adding RDP FW Rule"
 	Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
 }
 ############################################
@@ -143,5 +152,6 @@ Try{
 	Get-NetFirewallRule -DisplayName "TFTP"
 }
 Catch{
+	echo "Adding TFTP FW Rule"
 	New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
 }
