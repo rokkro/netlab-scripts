@@ -218,6 +218,9 @@ if($INSTALL_WSL){
 		# Add enviro variables
 		$userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
 		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_name, "User")
+		
+		cd $base_path
+		./$base_name + ".exe"
 	}
 	
 }
