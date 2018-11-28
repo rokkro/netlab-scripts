@@ -186,7 +186,7 @@ if($INSTALL_WSL){
 	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 	
 	# C:\distros\ubuntu1804
-	$base_name = $DISTRO_SAVE_LOCATION + $DISTRO_NAME
+	$base_path = $DISTRO_SAVE_LOCATION + $DISTRO_NAME
 	
 	# Make sure base dirs exist
 	if (!(Test-Path $DISTRO_SAVE_LOCATION)){
@@ -194,12 +194,12 @@ if($INSTALL_WSL){
 	}
 	
 	# See if dir exists (basic way of checking if distro was already downloaded)
-	if (!(Test-Path $base_name)){
+	if (!(Test-Path $base_path)){
 		
 		# C:\distros\ubuntu1804.appx
-		$appx_name = $base_name + ".appx"
+		$appx_name = $base_path + ".appx"
 		# C:\distros\ubuntu1804.zip
-		$zip_name = $base_name + ".zip"
+		$zip_name = $base_path + ".zip"
 
 		cd $DISTRO_SAVE_LOCATION
 		
@@ -209,7 +209,7 @@ if($INSTALL_WSL){
 
 		# Make the appx a zip file, then extract it into C:\distros\ubuntu1804\
 		Rename-Item $appx_name $zip_name
-		Expand-Archive $zip_name $base_name
+		Expand-Archive $zip_name $base_path
 		
 		# Remove compressed files
 		rm $appx_name
@@ -217,10 +217,10 @@ if($INSTALL_WSL){
 		
 		# Add enviro variables
 		$userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
-		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_name, "User")
+		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_path, "User")
 		
 		cd $base_path
-		./$base_name + ".exe"
+		./$base_path + ".exe"
 	}
 	
 }
