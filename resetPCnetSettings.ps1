@@ -40,10 +40,14 @@ foreach($adapter_name in $all_adapters){
 
 		# Enable DHCP
 		$interface | Set-NetIPInterface -DHCP Enabled
-
-		# Configure the DNS Servers automatically
-		$interface | Set-DnsClientServerAddress -ResetServerAddresses
 	}
+	
+	# Make sure metric is automatic and not manually assigned
+	$interface | Set-NetIPInterface -AutomaticMetric Enabled
+
+	# Configure the DNS Servers automatically
+	$interface | Set-DnsClientServerAddress -ResetServerAddresses
+	
 	# Get IP Address of adapter
 	$ipv4_address = $adapter | Get-NetIPAddress -AddressFamily IPv4 | Select-Object -ExpandProperty "IPAddress"
 	
