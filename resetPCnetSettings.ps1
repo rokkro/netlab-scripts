@@ -1,7 +1,3 @@
-############################################
-#            ADAPTER SETTINGS              #
-############################################
-
 $INTERNET_CONNECTION_ADAPTER_NAME = "Internet Connection"
 $LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
 
@@ -9,14 +5,19 @@ $LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
 $REGISTER_DNS_INTERNET_CONNECTION = $false
 $REGISTER_DNS_LAN_CONNECTION = $true
 
+# Highest domain num (dom1 - dom6 in this case)
+$MAX_DOMAIN_NUM = 6
+
+############################################
+#            ADAPTER SETTINGS              #
+############################################
+
 # Get names of all adapters on PC
 $all_adapters = Get-NetAdapter | Select-Object -ExpandProperty "Name"
 
 # Stores domain number this PC resides in
 $domain_num
 
-# Highest domain num (dom1 - dom6 in this case)
-$max_domain_num = 6
 
 foreach($adapter_name in $all_adapters){
 
@@ -105,7 +106,7 @@ $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 
 # Add persistent routes. Direct domain router traffic.
 # If traffic is destined for another domain (10.0.X.Y), route it through the domain router.
-for($i=1;$i -le $max_domain_num;$i++){
+for($i=1;$i -le $MAX_DOMAIN_NUM;$i++){
 	route delete 10.0.$i.0
 	route -p add 10.0.$i.0 mask 255.255.255.0 10.0.$domain_num.1 if $interface_index
 }
