@@ -195,13 +195,15 @@ if($INSTALL_WSL){
 	
 	# See if dir exists (basic way of checking if distro was already downloaded)
 	if (!(Test-Path $base_name)){
-	
+		
 		# C:\distros\ubuntu1804.appx
 		$appx_name = $base_name + ".appx"
 		# C:\distros\ubuntu1804.zip
 		$zip_name = $base_name + ".zip"
 
 		cd $DISTRO_SAVE_LOCATION
+		
+		"Downloading distro..."
 		# Download distro at URL into file named C:\distros\ubuntu1804.appx
 		Invoke-WebRequest -Uri $DISTRO_DOWNLOAD_URL -OutFile $appx_name -UseBasicParsing
 
