@@ -10,7 +10,7 @@ $REGISTER_DNS_LAN_CONNECTION = $true
 $MAX_DOMAIN_NUM = 6
 
 # WSL GLOBALS
-$INSTALL_WSL = $false
+$INSTALL_WSL = $true
 $DISTRO_DOWNLOAD_URL = "https://aka.ms/wsl-ubuntu-1804"
 $DISTRO_SAVE_LOCATION = "C:\"
 $DISTRO_NAME = "ubuntu1804"
@@ -180,19 +180,30 @@ $ProgressPreference = 'SilentlyContinue'
 
 # Install telnet client
 dism /online /Enable-Feature /FeatureName:TelnetClient
+dism /online /get-featureinfo /FeatureName:TelnetClient
 
 if($INSTALL_WSL){
 	# Install Windows Subsystem for Linux feature (User has to install distro)
 	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
-
+	
+	# C:\ubuntu1804
 	$base_name = $DISTRO_SAVE_LOCATION + $DISTRO_NAME
-	$appx_name = $base_name + ".appx"
-	$zip_name = $base_name + ".zip"
 	
-	cd $DISTRO_SAVE_LOCATION
-	Invoke-WebRequest -Uri $DISTRO_DOWNLOAD_URL -OutFile $appx_name -UseBasicParsing
+	# See if dir exists (simple way of checking if distro was already downloaded)
+	if (!(Test-Path $base_name)){
 	
-	Rename-Item $appx_name $zip_name
-	Expand-Archive $zip_name $base_name
+		# C:\ubuntu1804.appx
+		$appx_name = $base_name + ".appx"
+		# C:\ubuntu1804.zip
+		$zip_name = $base_name + ".zip"
+
+		cd $DISTRO_SAVE_LOCATION
+		# Download distro at URL into file named C:\ubuntu1804.appx
+		Invoke-WebRequest -Uri $DISTRO_DOWNLOAD_URL -OutFile $appx_name -UseBasicParsing
+
+		# Make the appx a zip file, then extract it into C:\ubuntu1804\
+		Rename-Item $appx_name $zip_name
+		Expand-Archive $zip_name $base_name
+	}
 	
 }
