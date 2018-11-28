@@ -203,6 +203,9 @@ if($INSTALL_WSL){
 		# Make the appx a zip file, then extract it into C:\ubuntu1804\
 		Rename-Item $appx_name $zip_name
 		Expand-Archive $zip_name $base_name
+		
+		rm $appx_name
+		rm $zip_name
 	}
 	
 }
