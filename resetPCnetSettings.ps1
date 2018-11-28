@@ -32,7 +32,7 @@ foreach($adapter_name in $all_adapters){
 
 	# Check if DHCP is disabled
 	If ($interface.Dhcp -eq "Disabled") {
-
+		"Reverting " + $adapter_name + " to DHCP..."
 		# Remove existing gateway
 		If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
 			$interface | Remove-NetRoute -Confirm:$false
@@ -80,6 +80,7 @@ foreach($adapter_name in $all_adapters){
 #            PERSISTENT ROUTES             #
 ############################################
 
+"Deleting routes..."
 # Remove existing routes
 route delete 0.0.0.0
 route delete 10.0.0.0
@@ -88,6 +89,7 @@ route delete 10.0.0.0
 ### Internet Connection ### 
 ###########################
 
+"Configuring routes for " + $INTERNET_CONNECTION_ADAPTER_NAME + "..."
 # Get adapter by name
 $adapter = Get-NetAdapter -Name $INTERNET_CONNECTION_ADAPTER_NAME
 # Getting interface index (necessary for persistent routes to become active)
@@ -103,6 +105,7 @@ route -p add 10.0.0.0 mask 255.255.255.0 10.0.0.3 if $interface_index
 ### LAN Connection ### 
 ######################
 
+"Configuring routes for " + $LAN_CONNECTION_ADAPTER_NAME + "..."
 # Get adapter by name
 $adapter = Get-NetAdapter -Name $LAN_CONNECTION_ADAPTER_NAME
 # Getting interface index (necessary for persistent route to become active)
@@ -141,9 +144,10 @@ Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinSt
 Try{
 	# Check if the rule exists.
 	Get-NetFirewallRule -DisplayGroup "Remote Desktop"
+	"RDP FW Rule already exists."
 } Catch{
 	# Enable Windows firewall rules to allow incoming RDP
-	"Adding RDP FW Rule"
+	"Adding RDP FW Rule..."
 	Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
 }
 ############################################
@@ -154,7 +158,8 @@ Try{
 Try{
 	# Check if the rule exists.
 	Get-NetFirewallRule -DisplayName "TFTP"
+	"TFTP FW Rule Already exists."
 } Catch{
-	"Adding TFTP FW Rule"
+	"Adding TFTP FW Rule..."
 	New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
 }
