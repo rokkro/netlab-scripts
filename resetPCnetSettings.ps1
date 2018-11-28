@@ -12,7 +12,7 @@ $MAX_DOMAIN_NUM = 6
 # WSL GLOBALS
 $INSTALL_WSL = $true
 $DISTRO_DOWNLOAD_URL = "https://aka.ms/wsl-ubuntu-1804"
-$DISTRO_SAVE_LOCATION = "C:\"
+$DISTRO_SAVE_LOCATION = "C:\Distros\"
 $DISTRO_NAME = "ubuntu1804"
 
 ############################################
@@ -206,6 +206,9 @@ if($INSTALL_WSL){
 		
 		rm $appx_name
 		rm $zip_name
+		
+		$userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
+		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_name, "User")
 	}
 	
 }
