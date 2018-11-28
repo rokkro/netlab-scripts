@@ -179,12 +179,11 @@ Try{
 $ProgressPreference = 'SilentlyContinue'
 
 # Install telnet client
-dism /online /Enable-Feature /FeatureName:TelnetClient
-dism /online /get-featureinfo /FeatureName:TelnetClient
+dism /online /Enable-Feature /NoRestart /FeatureName:TelnetClient 
 
 if($INSTALL_WSL){
 	# Install Windows Subsystem for Linux feature (User has to install distro)
-	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 	
 	# C:\ubuntu1804
 	$base_name = $DISTRO_SAVE_LOCATION + $DISTRO_NAME
