@@ -190,7 +190,7 @@ if($INSTALL_WSL){
 	
 	# Make sure base dirs exist
 	if (!(Test-Path $DISTRO_SAVE_LOCATION)){
-		New-Item -ItemType directory -Path $base_path
+		mkdir -p $base_path
 	}
 	
 	# See if dir exists (basic way of checking if distro was already downloaded)
