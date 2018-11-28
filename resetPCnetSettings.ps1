@@ -137,8 +137,7 @@ Set-ItemProperty ‘HKLM:\SYSTEM\CurrentControlSet\Control\Terminal Server\WinSt
 Try{
 	# Check if the rule exists.
 	Get-NetFirewallRule -DisplayGroup "Remote Desktop"
-}
-Catch{
+} Catch{
 	# Enable Windows firewall rules to allow incoming RDP
 	echo "Adding RDP FW Rule"
 	Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
@@ -151,8 +150,7 @@ Catch{
 Try{
 	# Check if the rule exists.
 	Get-NetFirewallRule -DisplayName "TFTP"
-}
-Catch{
+} Catch{
 	echo "Adding TFTP FW Rule"
 	New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
 }
