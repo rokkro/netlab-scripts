@@ -212,7 +212,6 @@ if($INSTALL_WSL){
 		Expand-Archive $zip_name $base_path
 		
 		# Remove compressed files
-		rm $appx_name
 		rm $zip_name
 		
 		# Add enviro variables
