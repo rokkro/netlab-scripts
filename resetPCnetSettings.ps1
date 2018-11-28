@@ -163,3 +163,14 @@ Try{
 	"Adding TFTP FW Rule..."
 	New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
 }
+
+
+############################################
+#           OPTIONAL FEATURES              #
+############################################
+
+# Install telnet client
+dism /online /Enable-Feature /FeatureName:TelnetClient
+
+# Install Windows Subsystem for Linux feature (User has to install distro)
+Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
