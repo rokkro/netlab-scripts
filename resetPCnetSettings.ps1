@@ -12,7 +12,7 @@ $MAX_DOMAIN_NUM = 6
 # WSL GLOBALS
 $INSTALL_WSL = $true
 $DISTRO_DOWNLOAD_URL = "https://aka.ms/wsl-ubuntu-1804"
-$DISTRO_SAVE_LOCATION = "C:\Distros\"
+$DISTRO_SAVE_LOCATION = "C:\distros\"
 $DISTRO_NAME = "ubuntu1804"
 
 ############################################
@@ -185,28 +185,35 @@ if($INSTALL_WSL){
 	# Install Windows Subsystem for Linux feature (User has to install distro)
 	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 	
-	# C:\ubuntu1804
+	# C:\distros\ubuntu1804
 	$base_name = $DISTRO_SAVE_LOCATION + $DISTRO_NAME
 	
-	# See if dir exists (simple way of checking if distro was already downloaded)
+	# Make sure base dirs exist
+	if (!(Test-Path $DISTRO_SAVE_LOCATION)){
+		New-Item -ItemType directory -Path $DISTRO_SAVE_LOCATION
+	}
+	
+	# See if dir exists (basic way of checking if distro was already downloaded)
 	if (!(Test-Path $base_name)){
 	
-		# C:\ubuntu1804.appx
+		# C:\distros\ubuntu1804.appx
 		$appx_name = $base_name + ".appx"
-		# C:\ubuntu1804.zip
+		# C:\distros\ubuntu1804.zip
 		$zip_name = $base_name + ".zip"
 
 		cd $DISTRO_SAVE_LOCATION
-		# Download distro at URL into file named C:\ubuntu1804.appx
+		# Download distro at URL into file named C:\distros\ubuntu1804.appx
 		Invoke-WebRequest -Uri $DISTRO_DOWNLOAD_URL -OutFile $appx_name -UseBasicParsing
 
-		# Make the appx a zip file, then extract it into C:\ubuntu1804\
+		# Make the appx a zip file, then extract it into C:\distros\ubuntu1804\
 		Rename-Item $appx_name $zip_name
 		Expand-Archive $zip_name $base_name
 		
+		# Remove compressed files
 		rm $appx_name
 		rm $zip_name
 		
+		# Add enviro variables
 		$userenv = [System.Environment]::GetEnvironmentVariable("Path", "User")
 		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_name, "User")
 	}
