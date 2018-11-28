@@ -69,7 +69,7 @@ foreach($adapter_name in $all_adapters){
 		$dot_before_last_dot = $ipv4_address.LastIndexOf(".",$last_dot - 1)  + 1
 		# Get substring of IP address to get domain_num. Second arg of .substring() is the length of substring 
 		$domain_num = $ipv4_address.substring($dot_before_last_dot,($last_dot - $dot_before_last_dot))
-		echo "Domain number is " $domain_num
+		"Domain number is " + $domain_num
 		
 		# Allow domain adapter to do DNS registration
 		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_LAN_CONNECTION 
@@ -118,13 +118,13 @@ for($i=1;$i -le $MAX_DOMAIN_NUM;$i++){
 ############################################
 #            ENABLE FIREWALL               #
 ############################################
-echo "Enabling Firewall..."
+"Enabling Firewall..."
 Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
 
 ############################################
 #            DISABLE PROXY                 #
 ############################################
-echo "Disabling Proxy..."
+"Disabling Proxy..."
 set-itemproperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' -name ProxyEnable -value 0 
 
 ############################################
@@ -143,7 +143,7 @@ Try{
 	Get-NetFirewallRule -DisplayGroup "Remote Desktop"
 } Catch{
 	# Enable Windows firewall rules to allow incoming RDP
-	echo "Adding RDP FW Rule"
+	"Adding RDP FW Rule"
 	Enable-NetFirewallRule -DisplayGroup “Remote Desktop”
 }
 ############################################
@@ -155,6 +155,6 @@ Try{
 	# Check if the rule exists.
 	Get-NetFirewallRule -DisplayName "TFTP"
 } Catch{
-	echo "Adding TFTP FW Rule"
+	"Adding TFTP FW Rule"
 	New-NetFirewallRule -DisplayName 'TFTP' -Profile @('Domain', 'Private', 'Public') -Direction Inbound -Action Allow -Protocol UDP -LocalPort '69'
 }
