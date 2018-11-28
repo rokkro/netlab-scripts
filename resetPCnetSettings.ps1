@@ -1,3 +1,4 @@
+# ADAPTER GLOBALS
 $INTERNET_CONNECTION_ADAPTER_NAME = "Internet Connection"
 $LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
 
@@ -7,6 +8,12 @@ $REGISTER_DNS_LAN_CONNECTION = $true
 
 # Highest domain num (dom1 - dom6 in this case)
 $MAX_DOMAIN_NUM = 6
+
+# WSL GLOBALS
+$INSTALL_WSL = $false
+$DISTRO_DOWNLOAD_URL = "https://aka.ms/wsl-ubuntu-1804"
+$DISTRO_SAVE_LOCATION = "C:\"
+$DISTRO_NAME = "ubuntu1804"
 
 ############################################
 #            ADAPTER SETTINGS              #
@@ -168,9 +175,24 @@ Try{
 ############################################
 #           OPTIONAL FEATURES              #
 ############################################
+# Hide progress bars
+$ProgressPreference = 'SilentlyContinue'
 
 # Install telnet client
 dism /online /Enable-Feature /FeatureName:TelnetClient
 
-# Install Windows Subsystem for Linux feature (User has to install distro)
-Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+if($INSTALL_WSL){
+	# Install Windows Subsystem for Linux feature (User has to install distro)
+	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux
+
+	$base_name = $DISTRO_SAVE_LOCATION + $DISTRO_NAME
+	$appx_name = $base_name + ".appx"
+	$zip_name = $base_name + ".zip"
+	
+	cd $DISTRO_SAVE_LOCATION
+	Invoke-WebRequest -Uri $DISTRO_DOWNLOAD_URL -OutFile $appx_name -UseBasicParsing
+	
+	Rename-Item $appx_name $zip_name
+	Expand-Archive $zip_name $base_name
+	
+}
