@@ -219,7 +219,7 @@ if($INSTALL_WSL){
 		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_path, "User")
 		
 		cd $base_path
-		iex "$base_path\$DISTRO_NAME.exe"
+		iex "$base_path\$DISTRO_NAME.exe install"
 	}
 	
 }
