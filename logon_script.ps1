@@ -193,8 +193,8 @@ if($INSTALL_WSL){
 		mkdir -p $base_path
 	}
 	
-	# See if dir exists (basic way of checking if distro was already downloaded)
-	if (!(Test-Path $base_path)){
+	# See if .exe in dir exists (basic way of checking if distro was already downloaded). May break if WSL starts using multiple .exe's
+	if (!(Test-Path -Path ($base_path + "/" + '*.exe') -PathType Leaf)){
 		
 		# C:\distros\ubuntu1804.appx
 		$appx_name = $base_path + ".appx"
@@ -220,7 +220,7 @@ if($INSTALL_WSL){
 		
 		cd $base_path
 		# Run the downloaded distro installer. Install arg prevents bash from launching.
-		iex "$base_path\$DISTRO_NAME.exe install"
+		iex "$base_path\*.exe install"
 	}
 	
 }
