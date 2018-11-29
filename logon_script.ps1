@@ -182,7 +182,7 @@ $ProgressPreference = 'SilentlyContinue'
 dism /online /Enable-Feature /NoRestart /FeatureName:TelnetClient 
 
 if($INSTALL_WSL){
-	# Install Windows Subsystem for Linux feature (User has to install distro)
+	# Install Windows Subsystem for Linux feature 
 	Enable-WindowsOptionalFeature -Online -FeatureName Microsoft-Windows-Subsystem-Linux -NoRestart
 	
 	# C:\distros\ubuntu1804
@@ -219,6 +219,7 @@ if($INSTALL_WSL){
 		[System.Environment]::SetEnvironmentVariable("PATH", $userenv + $base_path, "User")
 		
 		cd $base_path
+		# Run the downloaded distro installer. Install arg prevents bash from launching.
 		iex "$base_path\$DISTRO_NAME.exe install"
 	}
 	
