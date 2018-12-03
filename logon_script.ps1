@@ -39,10 +39,11 @@ foreach($adapter_name in $all_adapters){
 	# Check if DHCP is disabled
 	If ($interface.Dhcp -eq "Disabled") {
 		"Reverting " + $adapter_name + " to DHCP..."
+		
 		# Remove existing gateway
-		If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
-			$interface | Remove-NetRoute -Confirm:$false
-		}
+		# If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
+		# 	$interface | Remove-NetRoute -Confirm:$false
+		# }
 
 		# Enable DHCP
 		$interface | Set-NetIPInterface -DHCP Enabled
@@ -51,6 +52,13 @@ foreach($adapter_name in $all_adapters){
 		# Renew DHCP 
 		ipconfig /release $adapter_name
 		ipconfig /renew $adapter_name
+		
+		# Restart Adapter. This seems to be necessary to prevent a crash
+		Restart-NetAdapter -name $adapter_name
+		
+		# Sleep to make sure adapter restarts successfully
+		"Restarting Adapter..."
+		Start-Sleep -Seconds 20
 	}
 	
 	# Make sure metric is automatic and not manually assigned
