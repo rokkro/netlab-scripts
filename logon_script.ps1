@@ -1,5 +1,5 @@
 
-# Make all errors terminating. Makes try..catch blocks actually work.
+# Make all errors terminating. Makes some try..catch blocks actually work.
 $ErrorActionPreference = "Stop"; 
 
 # ADAPTER GLOBALS
@@ -62,6 +62,7 @@ foreach($adapter_name in $all_adapters){
 	}
 	
 	# Make sure metric is automatic and not manually assigned
+	# May cause error right after DHCP reset, but doesn't really matter.
 	$interface | Set-NetIPInterface -AutomaticMetric Enabled
 
 	# Configure the DNS Servers automatically
