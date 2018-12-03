@@ -46,6 +46,11 @@ foreach($adapter_name in $all_adapters){
 
 		# Enable DHCP
 		$interface | Set-NetIPInterface -DHCP Enabled
+		$interface | Set-NetIPInterface -AddressFamily "IPv4"
+		
+		# Renew DHCP 
+		ipconfig /release $adapter_name
+		ipconfig /renew $adapter_name
 	}
 	
 	# Make sure metric is automatic and not manually assigned
