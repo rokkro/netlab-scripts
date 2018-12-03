@@ -1,4 +1,3 @@
-import-module nettcpip
 
 # Make all errors terminating. Makes try..catch blocks actually work.
 $ErrorActionPreference = "Stop"; 
@@ -41,9 +40,10 @@ foreach($adapter_name in $all_adapters){
 		"Reverting " + $adapter_name + " to DHCP..."
 		
 		# Remove existing gateway
-		# If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
+		If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
 		# 	$interface | Remove-NetRoute -Confirm:$false
-		# }
+			netsh interface ipv4 set address name=$adapter_name source=dhcp
+		}
 
 		# Enable DHCP
 		$interface | Set-NetIPInterface -DHCP Enabled
