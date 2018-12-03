@@ -1,5 +1,7 @@
 import-module nettcpip
 
+$ErrorActionPreference = "Stop"; #Make all errors terminating. Makes try..catch blocks actually work.
+
 # ADAPTER GLOBALS
 $INTERNET_CONNECTION_ADAPTER_NAME = "Internet Connection"
 $LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
