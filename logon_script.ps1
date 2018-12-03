@@ -57,10 +57,10 @@ foreach($adapter_name in $all_adapters){
 	# If adapter has IP starting with 10.0.0.X
 	If ($ipv4_address.StartsWith("10.0.0.")) {
 	
-		Try{ # Throws exception if adapter already has this name
+		If (!($adapter_name -eq $INTERNET_CONNECTION_ADAPTER_NAME)){
 			# Rename adapter
 			Rename-NetAdapter -Name $adapter_name -NewName $INTERNET_CONNECTION_ADAPTER_NAME
-		} Catch{}
+		}
 		
 		# Prevent internet adapter from DNS registration
 		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_INTERNET_CONNECTION
@@ -68,11 +68,11 @@ foreach($adapter_name in $all_adapters){
 	
 	# If adapter has IP starting with 10.0.X.Y (domain adapter)
 	elseif ($ipv4_address.StartsWith("10.0.")){
-	
-		Try{ # Throws exception if adapter already has this name
+		
+		If (!($adapter_name -eq $LAN_CONNECTION_ADAPTER_NAME)){
 			# Rename it.
 			Rename-NetAdapter -Name $adapter_name -NewName $LAN_CONNECTION_ADAPTER_NAME
-		} Catch{}
+		}
 		
 		# Get the domain number from its IP address
 		# This assumes the switch/router are set up correctly
