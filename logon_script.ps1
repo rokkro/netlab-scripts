@@ -1,3 +1,5 @@
+import-module nettcpip
+
 # ADAPTER GLOBALS
 $INTERNET_CONNECTION_ADAPTER_NAME = "Internet Connection"
 $LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
