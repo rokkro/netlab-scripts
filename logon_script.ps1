@@ -96,6 +96,7 @@ foreach($adapter_name in $all_adapters){
 		$dot_before_last_dot = $ipv4_address.LastIndexOf(".",$last_dot - 1)  + 1
 		# Get substring of IP address to get domain_num. Second arg of .substring() is the length of substring 
 		$domain_num = $ipv4_address.substring($dot_before_last_dot,($last_dot - $dot_before_last_dot))
+		"Domain number is " + $domain_num
 		
 		# Allow domain adapter to do DNS registration
 		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_LAN_CONNECTION 
@@ -107,18 +108,17 @@ foreach($adapter_name in $all_adapters){
 		$hostname = Hostname
 		for($i=1;$i -lt $hostname.length;$i++){
 			# Start substring at char 3 in 'domXpcY'
-			$dn = $hostname.substring(3,$i)
-			# If the substring is not an int, exit loop
-			if(!($dn -is [int])){
-				break
-			}
-			else{
+			Try{
+				# Try to typecast to an int
+				$dn = [int]$hostname.substring(3,$i)
 				$domain_num = $dn
+			} Catch{ 				
+				# If the substring is not an int, exit loop
+				break
 			}
 		}
 		"Domain number is " + $domain_num
 	}
-	
 }
 
 ############################################
