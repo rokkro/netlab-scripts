@@ -39,7 +39,7 @@ foreach($adapter_name in $all_adapters){
 	If ($interface.Dhcp -eq "Disabled") {
 		"Reverting " + $adapter_name + " to DHCP..."
 		
-		# Remove existing gateway
+		# Remove existing gateway(s) from adapter
 		If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
 			netsh interface ipv4 set address name=$adapter_name source=dhcp
 		}
