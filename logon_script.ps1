@@ -41,7 +41,6 @@ foreach($adapter_name in $all_adapters){
 		
 		# Remove existing gateway
 		If (($interface | Get-NetIPConfiguration).Ipv4DefaultGateway) {
-		# 	$interface | Remove-NetRoute -Confirm:$false
 			netsh interface ipv4 set address name=$adapter_name source=dhcp
 		}
 
