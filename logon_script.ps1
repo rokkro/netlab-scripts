@@ -101,26 +101,25 @@ foreach($adapter_name in $all_adapters){
 		# Allow domain adapter to do DNS registration
 		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_LAN_CONNECTION 
 	}
-	
-	# GETTING DOMAIN NUM FROM HOSTNAME...
-	# If it fails to get the domain number from the IP, try to extract it from the PC hostname
-	if(!$domain_num){
-		$hostname = Hostname
-		for($i=1;$i -lt $hostname.length;$i++){
-			# Start substring at char 3 in 'domXpcY'
-			Try{
-				# Try to typecast to an int
-				$dn = [int]$hostname.substring(3,$i)
-				$domain_num = $dn
-			} Catch{ 				
-				# If the substring is not an int, exit loop
-				break
-			}
-		}
-		"Domain number is " + $domain_num
-	}
 }
 
+# GETTING DOMAIN NUM FROM HOSTNAME...
+# If it fails to get the domain number from the LAN Connection Adapter, try to extract it from the PC hostname
+if(!$domain_num){
+	$hostname = Hostname
+	for($i=1;$i -lt $hostname.length;$i++){
+		# Start substring at char 3 in 'domXpcY'
+		Try{
+			# Try to typecast to an int
+			$dn = [int]$hostname.substring(3,$i)
+			$domain_num = $dn
+		} Catch{ 				
+			# If the substring is not an int, exit loop
+			break
+		}
+	}
+	"Domain number is " + $domain_num
+}
 ############################################
 #            PERSISTENT ROUTES             #
 ############################################
