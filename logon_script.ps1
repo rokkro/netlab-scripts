@@ -53,10 +53,10 @@ foreach($adapter_name in $all_adapters){
 		ipconfig /renew $adapter_name
 		
 		# Restart Adapter. This seems to be necessary to prevent a crash
+		"Restarting Adapter..."
 		Restart-NetAdapter -name $adapter_name
 		
 		# Sleep to make sure adapter restarts successfully
-		"Restarting Adapter..."
 		Start-Sleep -Seconds 20
 	}
 	
