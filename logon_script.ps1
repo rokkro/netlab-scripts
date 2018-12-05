@@ -140,6 +140,7 @@ $interface_index = $adapter | Select-Object -ExpandProperty InterfaceIndex
 
 # Add persistent routes. Direct domain router traffic.
 # If traffic is destined for another domain (10.0.X.Y), route it through the domain router.
+# If the domain_num was not obtained due to faulty router settings, these routes wont be added.
 for($i=1;$i -le $MAX_DOMAIN_NUM;$i++){
 	route delete 10.0.$i.0
 	route -p add 10.0.$i.0 mask 255.255.255.0 10.0.$domain_num.1 if $interface_index
