@@ -90,17 +90,36 @@ foreach($adapter_name in $all_adapters){
 			Rename-NetAdapter -Name $adapter_name -NewName $LAN_CONNECTION_ADAPTER_NAME
 		}
 		
-		# Get the domain number from its IP address
+		# GETTING DOMAIN NUM FROM IP ADDRESS...
 		# This assumes the switch/router are set up correctly
 		$last_dot = $ipv4_address.LastIndexOf(".")
 		$dot_before_last_dot = $ipv4_address.LastIndexOf(".",$last_dot - 1)  + 1
 		# Get substring of IP address to get domain_num. Second arg of .substring() is the length of substring 
 		$domain_num = $ipv4_address.substring($dot_before_last_dot,($last_dot - $dot_before_last_dot))
-		"Domain number is " + $domain_num
 		
 		# Allow domain adapter to do DNS registration
 		$adapter | set-dnsclient -RegisterThisConnectionsAddress $REGISTER_DNS_LAN_CONNECTION 
 	}
+	
+	# GETTING DOMAIN NUM FROM HOSTNAME...
+	# If it fails to get the domain number from the IP, try to extract it from the PC hostname
+	if(!$domain_num){
+		$hostname = Hostname
+		for(int i=1;i<$hostname.length;i++){
+			# Start substring at char 3 in 'domXpcY'
+			$dn = $hostname.substring(3,$i)
+			# If the substring is not an int, exit loop
+			#	else store the int in domain_num
+			if(!($dn -is [int])){
+				break
+			}
+			else{
+				$domain_num = $dn
+			}
+		}
+		"Domain number is " + $domain_num
+	}
+	
 }
 
 ############################################
