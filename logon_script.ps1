@@ -109,7 +109,6 @@ foreach($adapter_name in $all_adapters){
 			# Start substring at char 3 in 'domXpcY'
 			$dn = $hostname.substring(3,$i)
 			# If the substring is not an int, exit loop
-			#	else store the int in domain_num
 			if(!($dn -is [int])){
 				break
 			}
