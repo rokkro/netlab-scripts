@@ -105,7 +105,7 @@ foreach($adapter_name in $all_adapters){
 	# If it fails to get the domain number from the IP, try to extract it from the PC hostname
 	if(!$domain_num){
 		$hostname = Hostname
-		for($i=1;i -lt $hostname.length;i++){
+		for($i=1;$i -lt $hostname.length;$i++){
 			# Start substring at char 3 in 'domXpcY'
 			$dn = $hostname.substring(3,$i)
 			# If the substring is not an int, exit loop
