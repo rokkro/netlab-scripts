@@ -10,6 +10,11 @@ $LAN_CONNECTION_ADAPTER_NAME = "LAN Connection"
 $REGISTER_DNS_INTERNET_CONNECTION = $false
 $REGISTER_DNS_LAN_CONNECTION = $true
 
+# Whether or not script should still add the domain specific persistent routes 
+# when the LAN Connection adapter doesn't have an IP like 10.0.X.Y
+# If true, the domain number will be obtained from the hostname instead of the IP
+$ADD_DOM_ROUTES_WHEN_CONFIG_BAD = $false
+
 # Highest domain num (dom1 - dom6 in this case)
 $MAX_DOMAIN_NUM = 6
 
@@ -103,22 +108,25 @@ foreach($adapter_name in $all_adapters){
 	}
 }
 
-# GETTING DOMAIN NUM FROM HOSTNAME...
-# If it fails to get the domain number from the LAN Connection Adapter, try to extract it from the PC hostname
-if(!$domain_num){
-	$hostname = Hostname
-	for($i=1;$i -lt $hostname.length;$i++){
-		# Start substring at char 3 in 'domXpcY'
-		Try{
-			# Try to typecast to an int
-			$dn = [int]$hostname.substring(3,$i)
-			$domain_num = $dn
-		} Catch{ 				
-			# If the substring is not an int, exit loop
-			break
+if($ADD_DOM_ROUTES_WHEN_CONFIG_BAD){
+	# GETTING DOMAIN NUM FROM HOSTNAME...
+	# If it fails to get the domain number from the LAN Connection Adapter, try to extract it from the PC hostname
+	# This will make sure the domain routes get added no matter what
+	if(!$domain_num){
+		$hostname = Hostname
+		for($i=1;$i -lt $hostname.length;$i++){
+			# Start substring at char 3 in 'domXpcY'
+			Try{
+				# Try to typecast to an int
+				$dn = [int]$hostname.substring(3,$i)
+				$domain_num = $dn
+			} Catch{ 				
+				# If the substring is not an int, exit loop
+				break
+			}
 		}
+		"Domain number is " + $domain_num
 	}
-	"Domain number is " + $domain_num
 }
 ############################################
 #            PERSISTENT ROUTES             #
