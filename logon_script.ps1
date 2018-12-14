@@ -13,7 +13,7 @@ $REGISTER_DNS_LAN_CONNECTION = $true
 # Whether or not script should still add the domain specific persistent routes 
 # when the LAN Connection adapter doesn't have an IP like 10.0.X.Y
 # If true, the domain number will be obtained from the hostname instead of the IP
-$ADD_DOM_ROUTES_WHEN_CONFIG_BAD = $false
+$ADD_DOM_ROUTES_WHEN_CONFIG_BAD = $true
 
 # Highest domain num (dom1 - dom6 in this case)
 $MAX_DOMAIN_NUM = 6
@@ -174,8 +174,8 @@ for($i=1;$i -le $MAX_DOMAIN_NUM;$i++){
 ############################################
 #            ENABLE FIREWALL               #
 ############################################
-"Enabling Firewall..."
-Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled True
+# "Enabling Firewall..."
+Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled NotConfigured
 
 ############################################
 #            DISABLE PROXY                 #
