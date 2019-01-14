@@ -13,7 +13,7 @@ puts "Copying backup to startup-config..."
 typeahead "\r"
 puts [ exec "copy flash:base.cfg nvram:startup-config" ]
 typeahead "\r"
-puts "Copying startup-config to running-config-config..."
+puts "Copying startup-config to running-config..."
 typeahead "\r"
 puts [ exec "copy nvram:startup-config nvram:running-config" ]
 typeahead "\r"
