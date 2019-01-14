@@ -17,6 +17,8 @@ puts "Copying startup-config to running-config-config..."
 typeahead "\r"
 puts [ exec "copy nvram:startup-config nvram:running-config" ]
 typeahead "\r"
+puts "Reloading device..."
+typeahead "\r"
 puts [ exec "reload" ]
 typeahead "\r"
 }
