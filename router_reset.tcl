@@ -5,7 +5,7 @@ typeahead "\r"
 puts [exec "copy nvram:startup-config flash:base.cfg" ]
 typeahead "\r"
 typeahead "\r"
-puts "Erasing Configuration..."
+puts "Erasing configuration..."
 typeahead "\r"
 puts [ exec "write erase" ]
 typeahead "\r"
