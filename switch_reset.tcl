@@ -15,7 +15,7 @@ puts [ exec "copy flash:base.cfg nvram:startup-config" ]
 typeahead ""
 puts [ exec "copy nvram:startup-config nvram:running-config" ]
 typeahead ""
-puts "Reloading device to generate new vlan.dat"
+puts "Reloading device to generate new VLAN Database"
 typeahead ""
 puts [ exec "reload" ]
 typeahead ""
