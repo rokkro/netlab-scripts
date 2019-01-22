@@ -175,7 +175,7 @@ for($i=1;$i -le $MAX_DOMAIN_NUM;$i++){
 #            ENABLE FIREWALL               #
 ############################################
 # "Enabling Firewall..."
-Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled NotConfigured
+# Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled NotConfigured
 
 ############################################
 #            DISABLE PROXY                 #
