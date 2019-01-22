@@ -1,11 +1,11 @@
 puts [open "flash:reset.tcl" w+] {
-puts "Backing up startup-config..."
+puts "Backing up startup-config to flash..."
 typeahead "\r"
 puts [exec "copy nvram:startup-config flash:base.cfg" ]
 puts "Erasing configuration..."
 typeahead "\r"
 puts [ exec "write erase" ]
-puts "Erasing VLAN database..."
+puts "Erasing VLAN database from flash..."
 typeahead "\r"
 puts [ exec "del flash:vlan.dat" ]
 puts "Copying backup to startup-config..."
