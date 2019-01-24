@@ -19,7 +19,7 @@ foreach($path in $localpaths){
 			"Deleting " + $path + "..."
 			Get-WMIObject -Class Win32_UserProfile | where {($_.LocalPath -eq $path)} | Remove-WMIObject  
 		}catch{
-			Remove-Item -path $path -recurse
+			Remove-Item -path $path -recurse -force
 		}
 	}
 }
