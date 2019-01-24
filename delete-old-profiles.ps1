@@ -1,5 +1,5 @@
 # Quick script to delete old user accounts after windows server upgrade
-# Probably needs PS version 6+ due to a bug with Remove-Item and symlinks in 5
+# Requires powershell 6
 
 # Make all errors terminating. Makes some try..catch blocks actually work.
 $ErrorActionPreference = "Stop"; 
