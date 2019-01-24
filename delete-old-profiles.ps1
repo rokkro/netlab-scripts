@@ -11,8 +11,12 @@ foreach($path in $localpaths){
 	$path = $path[3] 
 
 	# If it's from the old domain, and is not the local machine netlab account, delete it!
-	if(!$path.endsWith('TM') -and $path.startsWith('C:\Users\') -and !$path.endswith('netlab')){
-		"Deleting " + $path + "..."
-		Get-WMIObject -Class Win32_UserProfile | where {($_.LocalPath -eq $path)} | Remove-WMIObject  
+	if(!$path.endsWith('TM') -and $path.startsWith('C:\Users\') -and !$path.endswith('netlab') -and !$path.endswith('Public')){
+		try{
+			"Deleting " + $path + "..."
+			Get-WMIObject -Class Win32_UserProfile | where {($_.LocalPath -eq $path)} | Remove-WMIObject  
+		}catch{
+			Remove-Item -path $path -recurse
+		}
 	}
 }
