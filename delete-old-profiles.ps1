@@ -15,14 +15,15 @@ foreach($path in $localpaths){
 	# path is now an object array, the LocalPath is in the third position
 	$path = $path[3] 
 	"Path is " + $path
+	
 	# If it's from the old domain, and is not the local machine netlab account, delete it!
 	if(!$path.endsWith('TM') -and $path.startsWith('C:\Users\') -and !$path.endswith('netlab') -and !$path.endswith('Public') -and !$path.endswith('Default')){
 		try{
 			"Deleting " + $path + "..."
 			Get-CimInstance -Class Win32_UserProfile | where {($_.LocalPath -eq $path)} | Remove-CimInstance  
 		}catch{
-			"Threw an error. Deleting profile path at " + $path
-			Remove-Item -path $path -recurse -force
+			"Error deleting the entire profile!"
+			"*** Manually delete the profile directory at " + $path + " ***"
 		}
 	}
 }
