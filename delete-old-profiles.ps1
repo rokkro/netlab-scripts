@@ -1,4 +1,4 @@
-# Quick script to delete old user accounts before windows server upgrade
+# Quick script to delete old user accounts after windows server upgrade
 
 # Get info on all profiles on local machine
 $localpaths = Get-WMIObject -Class Win32_UserProfile | Select-Object  -Property LocalPath
