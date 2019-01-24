@@ -1,5 +1,8 @@
 # Quick script to delete old user accounts after windows server upgrade
 
+# Make all errors terminating. Makes some try..catch blocks actually work.
+$ErrorActionPreference = "Stop"; 
+
 # Get info on all profiles on local machine
 $localpaths = Get-WMIObject -Class Win32_UserProfile | Select-Object  -Property LocalPath
 
