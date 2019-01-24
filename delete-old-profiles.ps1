@@ -1,5 +1,6 @@
 # Quick script to delete old user accounts after windows server upgrade
-# Requires powershell 6
+# Requires powershell 6, run as admin. 
+# May crash during Remove-Item due to a pwsh bug. Manually delete that user folder and restart the script.
 
 # Make all errors terminating. Makes some try..catch blocks actually work.
 $ErrorActionPreference = "Stop"; 
