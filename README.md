@@ -1,6 +1,8 @@
 # netlab-scripts
 
-Logon Script - For static routes, firewall rules, and adapter/interface settings. Also disables proxy if that was turned on for some reason.
+Logon Script - For static routes, firewall rules, and adapter/interface settings. Also disables proxy if that was turned on for some reason. For use on Computers through group policy.
+
+FixTaskSchedulerExplorer.bat - In Windows Server 2019, after promoting a server to domain controller, the administrator account stops launching the explorer process properly. This is due to a scheduled task for explorer not running correctly, and also prevents you from launching explorer.exe manually. As a workaround, this script is used as a logon script for DCs to fix the administrator account. It kills the task scheduler service, launches the explorer process, and starts the task scheduler again.
 
 Optional Features - For installing telnet client and WSL. WSL installation process still a WIP. This script probably won't be used.
 
