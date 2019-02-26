@@ -3,6 +3,8 @@
 # https://social.technet.microsoft.com/Forums/en-US/70d26044-d896-4a6b-82c4-25ff263804ac/clearing-old-gpo-settings?forum=w7itprogeneral
 
 "Removing registry keys..."
+# Can't remove some of these, but it's worth a shot
+REG DELETE HKCU\SOFTWARE\Policies\Microsoft /f
 REG DELETE HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies /f
 REG DELETE HKLM\SOFTWARE\Policies\Microsoft /f
 REG DELETE HKLM\SOFTWARE\Policies\Microsoft /f
@@ -29,8 +31,3 @@ Klist purge
 
 # Update group policy
 gpupdate /force
-gpupdate /force /boot
-gpupdate /boot
-
-"Preparing to reboot..."
-Restart-Computer
