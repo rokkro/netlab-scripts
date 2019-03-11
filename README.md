@@ -6,7 +6,7 @@ FixTaskSchedulerExplorer.bat - In Windows Server 2019, after promoting a server 
 
 Optional Features - For installing telnet client and WSL. WSL installation process still a WIP. This script probably won't be used.
 
-clear-local-group-policy - Attempts to clear local group policy settings that won't disappear after changing the OU group policy. Doesn't work to well at the moment, will probably look into fleshing this out when the need for this arises. 
+clear-group-policy-cache - Attempts to clear GP cache that refuses to disappear, even with caching disabled.
 
 pwsh#-delete-old-profiles - Deletes old user profiles on a local machine that fall under `C:\Users\`. Edit the condition to make it match your needs. It will not delete profiles `Default` and `Public`. Two scripts - one for Powershell 5.X, and one for Powershell 6.X. Run as admin to make it work. May fail to remove some users' directories. It will notify you to delete it manually.
 
